@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Upload File</title>
+    <!-- (Optional) include Bootstrap or your own CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="container my-5">
+    <h1>Upload a File</h1>
+
+    <!-- Flash messages from RedirectAttributes -->
+    <div
+      th:if="${successMessage}"
+      class="alert alert-success"
+      th:text="${successMessage}"
+    ></div>
+    <div
+      th:if="${errorMessage}"
+      class="alert alert-danger"
+      th:text="${errorMessage}"
+    ></div>
+
+    <!-- Client-side error placeholder (still here for inline) -->
+    <div
+      id="clientError"
+      class="alert alert-danger"
+      style="display: none;"
+    ></div>
+
+    <form
+      th:action="@{/upload}"
+      method="post"
+      enctype="multipart/form-data"
+      class="mt-4"
+      id="uploadForm"
+    >
+      <!-- CSRF token auto-injected when using Spring Security -->
+      <input
+        type="hidden"
+        th:name="${_csrf.parameterName}"
+        th:value="${_csrf.token}"
+        th:if="${_csrf != null}"
+      />
+
+      <div class="mb-3">
+        <label for="fileName" class="form-label">File Name</label>
+        <input
+          type="text"
+          id="fileName"
+          name="fileName"
+          class="form-control"
+          placeholder="Enter a logical name"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="file" class="form-label">Choose File</label>
+        <input
+          type="file"
+          id="file"
+          name="file"
+          class="form-control"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+
+    <script>
+      (function() {
+        const form = document.getElementById('uploadForm');
+        const fileNameInput = document.getElementById('fileName');
+        const fileInput = document.getElementById('file');
+        const clientErrorDiv = document.getElementById('clientError');
+
+        form.addEventListener('submit', function(event) {
+          // Hide any previous client‐side error
+          clientErrorDiv.style.display = 'none';
+          clientErrorDiv.textContent = '';
+
+          // If no file was selected, let HTML 'required' attribute handle it
+          if (!fileInput.files.length) {
+            return;
+          }
+
+          const originalFileName = fileInput.files[0].name; // e.g. "myPhoto.jpg"
+          const originalExt = originalFileName
+            .substring(originalFileName.lastIndexOf('.') + 1)
+            .toLowerCase();
+
+          const enteredName = fileNameInput.value.trim(); // e.g. "vacation.jpg"
+          const enteredExt = enteredName
+            .substring(enteredName.lastIndexOf('.') + 1)
+            .toLowerCase();
+
+          // If the user did not include a “.” in the entered name, enteredExt === enteredName
+          // In that case, we definitely want to force them to add “.xxx”
+          if (
+            enteredName.indexOf('.') === -1 ||
+            enteredExt !== originalExt
+          ) {
+            event.preventDefault(); // block submission
+
+            const message =
+              'Error: The “File Name” must end with .' +
+              originalExt +
+              ' (matching the selected file’s extension).';
+
+            // Show a browser popup
+            alert(message);
+
+            // Also display inline (optional)
+            clientErrorDiv.style.display = 'block';
+            clientErrorDiv.textContent = message;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<!-- src/main/resources/templates/login.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login — ERPCA App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+</head>
+<body class="d-flex justify-content-center align-items-center vh-100">
+  <div class="card p-4" style="min-width:300px; max-width:400px; width:100%;">
+    <h3 class="card-title text-center mb-3">Please Sign In</h3>
+
+    <!-- Inline errorMessage -->
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Logout message if ?logout -->
+    <div th:if="${param.logout}" class="alert alert-success">
+      You have been logged out.
+    </div>
+
+    <form th:action="@{/login}" method="post">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          name="username"
+          placeholder="Enter username"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          placeholder="Enter password"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Log In</button>
+    </form>
+  </div>
+
+  <!-- Only render this block if errorMessage is present -->
+  <script th:if="${errorMessage}" th:inline="javascript">
+    /*<![CDATA[*/
+    alert([[${errorMessage}]]);
+    /*]]>*/
+  </script>
+</body>
+</html>

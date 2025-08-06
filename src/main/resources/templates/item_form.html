@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .form-heading {
+            text-align: center;
+            color: #333;
+             margin :0 0 50px 0 ;
+<!--              padding:  0 0 0 20px;-->
+        }
+
+        form {
+
+            background-color: #fff;
+            padding: 30px 40px;
+            max-width: 800px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        label {
+            width: 220px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input, select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+       display: block;
+       margin: 20px auto;
+            margin-top: 25px;
+            width: 20%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 600px) {
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            label {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+
+            input, select {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+<form action="/submitPurchase" method="post">
+    <div class="form-heading">
+        <h2>Item Form</h2>
+    </div>
+    <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" >
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description">
+    </div>
+
+    <div class="form-group">
+        <label for="under">Under:</label>
+        <input type="text" id="under" name="under">
+    </div>
+
+    <div class="form-group">
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category">
+    </div>
+
+    <div class="form-group">
+        <label for="unit">Unit:</label>
+        <input type="text" id="unit" name="unit">
+    </div>
+
+    <div class="form-group">
+        <label for="gstApplicable">GST Applicable:</label>
+        <select id="gstApplicable" name="gstApplicable">
+            <option value="Applicable">Applicable</option>
+            <option value="Not Applicable">Not Applicable</option>
+            <option value="Undefined">Undefined</option>
+
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="typeOfSupply">Type of Supply:</label>
+<!--        <input type="text" id="typeOfSupply" name="typeOfSupply">-->
+        <select id="typeOfSupply" name="typeOfSupply">
+            <option value="Goods">Goods</option>
+            <option value="Services">Services</option>
+
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="hsnSac">HSN/SAC:</label>
+        <input type="text" id="hsnSac" name="hsnSac">
+    </div>
+
+    <div class="form-group">
+        <label for="setAlterGst">Set/Alter GST Details:</label>
+        <select id="setAlterGst" name="setAlterGst">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="taxability">Taxability:</label>
+<!--        <input type="text" id="taxability" name="taxability">-->
+        <select id="taxability" name="taxability">
+            <option value="Unknow">Unknow</option>
+            <option value="Exempt">Exempt</option>
+            <option value="Nil Rated">Nil Rated</option>
+            <option value="Taxable">Taxable</option>
+
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="integratedTax">Integrated Tax (%):</label>
+        <input type="number" id="integratedTax" name="integratedTax">
+    </div>
+
+    <div class="form-group">
+        <label for="cessTax">Cess Tax (%):</label>
+        <input type="number" id="cessTax" name="cessTax">
+    </div>
+
+    <div class="form-group">
+        <label for="applicableDate">Applicable Date:</label>
+        <input type="date" id="applicableDate" name="applicableDate">
+    </div>
+
+    <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity">
+    </div>
+
+    <div class="form-group">
+        <label for="rate">Rate:</label>
+        <input type="number"  id="rate" name="rate">
+    </div>
+
+    <div class="form-group">
+        <label for="customerId">Customer ID:</label>
+        <input type="number" id="customerId" name="customerId">
+    </div>
+
+    <div class="form-group">
+        <label for="userId">User ID:</label>
+        <input type="number" id="userId" name="userId">
+    </div>
+
+    <div class="center-button">
+        <button type="submit">Submit</button>
+    </div>
+
+</form>
+
+</body>
+</html>

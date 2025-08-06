@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${customer.custID}==null ? 'New Customer' : 'Edit Customer'">Form</title>
+</head>
+<body>
+  <h1 th:text="${customer.custID}==null ? 'Create' : 'Update' + ' Customer'">Form</h1>
+  <form th:action="${customer.custID}==null
+                   ? @{/customers}
+                   : @{/customers/update/{id}(id=${customer.custID})}"
+        th:object="${customer}"
+        method="post">
+    
+    <label>Name:</label>
+    <input type="text" th:field="*{custName}" required/>
+    
+    <label>Address:</label>
+    <input type="text" th:field="*{address}"/>
+    
+    <label>Pincode:</label>
+    <input type="text" th:field="*{pincode}"/>
+    
+    <label>DigiPin:</label>
+    <input type="text" th:field="*{digiPin}"/>
+    
+    <button type="submit">Save</button>
+    <a th:href="@{/customers}">Cancel</a>
+  </form>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title th:text="${docInfo.docID} != null
+                  ? 'Edit Document #' + ${docInfo.docID} 
+                  : 'New Document'">
+        Document Form
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-4">
+    <h3 th:text="${docInfo.docID} != null 
+                  ? 'Edit Document #' + ${docInfo.docID} 
+                  : 'New Document'">
+        Document Form
+    </h3>
+
+    <!-- 1) Add enctype for file upload -->
+    <form
+            th:object="${docInfo}"
+            th:action="@{${docInfo.docID} != null ? '/docs/update/' + ${docInfo.docID} : '/docs'}"
+            method="post"
+            enctype="multipart/form-data">
+        <!-- carry the custID forward -->
+        <input type="hidden" name="custID" th:value="${custID}"/>
+
+        <!-- DOCUMENT NAME -->
+        <div class="mb-3">
+            <label for="docName" class="form-label">Document Name</label>
+            <input
+                    type="text"
+                    id="docName"
+                    class="form-control"
+                    th:field="*{docName}"
+                    placeholder="Enter a title for this document"
+                    required
+            />
+        </div>
+
+        <!-- 2) NEW: File Picker (to choose local file) -->
+        <div class="mb-3">
+            <label for="file" class="form-label">Select Document to Upload</label>
+            <input
+                    type="file"
+                    id="file"
+                    name="file"
+                    class="form-control"
+                    accept=".pdf,.doc,.docx,.jpg,.png"
+                    required
+            />
+            <div class="form-text">
+                Allowed types: PDF, DOC/DOCX, JPG, PNG
+            </div>
+        </div>
+
+        <!-- UPLOAD DATE -->
+        <div class="mb-3">
+            <label for="uploadDt" class="form-label">Upload Date</label>
+            <input
+                    type="date"
+                    id="uploadDt"
+                    name="uploadDt"
+                    class="form-control"
+                    th:value="${docInfo.uploadDt}"
+                    required
+            />
+        </div>
+
+        <!-- COMPLETION DATE -->
+        <div class="mb-3">
+            <label for="compltionDt" class="form-label">Completion Date</label>
+            <input
+                    type="date"
+                    id="compltionDt"
+                    name="compltionDt"
+                    class="form-control"
+                    th:value="${docInfo.uploadDt}"
+                    required
+            />
+        </div>
+
+        <!-- ALLO FLAG -->
+        <div class="mb-3">
+            <label for="alloflag" class="form-label">Allo Flag</label>
+            <select
+                    id="alloflag"
+                    class="form-select"
+                    th:field="*{alloflag}"
+                    required
+            >
+                <option value="Y" th:selected="${docInfo.alloflag} == 'Y'">Y</option>
+                <option value="N" th:selected="${docInfo.alloflag} == 'N'">N</option>
+            </select>
+        </div>
+
+        <!-- USER ID (readonly) -->
+        <div class="mb-3">
+            <label for="userID" class="form-label">User ID</label>
+            <input
+                    type="number"
+                    id="userID"
+                    class="form-control"
+                    th:field="*{userID}"
+                    readonly
+            />
+            <div class="form-text">Automatically set to the logged-in user</div>
+        </div>
+
+        <!-- SUBMIT / CANCEL -->
+        <button type="submit" class="btn btn-success me-2">
+        <span th:text="${docInfo.docID} != null ? 'Update' : 'Create'">
+          Submit
+        </span>
+        </button>
+        <a href="/docs" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous">
+</script>
+</body>
+</html>

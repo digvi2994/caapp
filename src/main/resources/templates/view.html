@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>View File</title>
+    <style>
+      /* Prevent text/image selection and dragging */
+      body, img, canvas {
+        user-select: none;
+        -webkit-user-drag: none;
+      }
+    </style>
+  </head>
+  <body class="container my-5">
+    <h1>View File</h1>
+
+    <!-- PDF Viewer -->
+    <div th:if="${fileExt == 'pdf'}">
+		<iframe
+		  th:attr="src=${fileUrl} + '#toolbar=0&navpanes=0&scrollbar=0'"
+		  width="100%"
+		  height="800px"
+		  style="border:none;">
+		</iframe>
+    </div>
+
+    <!-- Image Viewer -->
+    <div th:if="${fileExt == 'png' or fileExt == 'jpg' or fileExt == 'jpeg' or fileExt == 'gif'}">
+      <img
+        th:src="${fileUrl}"
+        alt="Uploaded Image"
+        style="max-width:100%; display:block; margin:auto;"
+      />
+    </div>
+
+    <!-- Fallback -->
+    <div th:if="${fileExt != 'pdf' and fileExt != 'png' and fileExt != 'jpg' and fileExt != 'jpeg' and fileExt != 'gif'}">
+      <p>Preview for this file type is not supported.</p>
+    </div>
+
+    <!-- Global JS deterrents -->
+    <script>
+      // Disable right-click
+      document.addEventListener('contextmenu', e => e.preventDefault());
+      // Disable common download/print/view-source shortcuts
+      document.addEventListener('keydown', e => {
+        if (e.ctrlKey && ['s','p','d','u','c','i'].includes(e.key.toLowerCase())) {
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
+</html>

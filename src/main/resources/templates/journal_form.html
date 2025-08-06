@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Journal Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .form-heading {
+            text-align: center;
+            color: #333;
+             margin :0 0 50px 0 ;
+<!--              padding:  0 0 0 20px;-->
+        }
+
+        form {
+
+            background-color: #fff;
+            padding: 30px 40px;
+            max-width: 800px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        label {
+            width: 220px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input, select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+       display: block;
+       margin: 20px auto;
+            margin-top: 25px;
+            width: 20%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 600px) {
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            label {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+
+            input, select {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+<form action="/submitJournal" method="post">
+    <div class="form-heading">
+        <h2>Journal Form</h2>
+    </div>
+    <div class="form-group">
+        <label for="journalNo">Journal No:</label>
+        <input type="text" id="journalNo" name="journalNo">
+    </div>
+
+    <div class="form-group">
+        <label for="referenceNo">Reference No:</label>
+        <input type="text" id="referenceNo" name="referenceNo">
+    </div>
+
+    <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date">
+    </div>
+
+    <div class="form-group">
+        <label for="costCenter">Cost Center:</label>
+        <input type="text" id="costCenter" name="costCenter">
+    </div>
+
+    <div class="form-group">
+        <label for="particulars">Particulars:</label>
+        <input type="text" id="particulars" name="particulars">
+    </div>
+
+    <div class="form-group">
+        <label for="itemName">Name of Item:</label>
+        <input type="text" id="itemName" name="itemName">
+    </div>
+
+    <div class="form-group">
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity">
+    </div>
+
+    <div class="form-group">
+        <label for="rate">Rate:</label>
+        <input type="number" id="rate" name="rate">
+    </div>
+
+    <div class="form-group">
+        <label for="drCr">Dr/Cr:</label>
+        <select id="drCr" name="drCr">
+            <option value="Dr">Dr</option>
+            <option value="Cr">Cr</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount">
+    </div>
+
+    <div class="form-group">
+        <label for="ledgerNarration">Ledger Narration:</label>
+        <input type="text" id="ledgerNarration" name="ledgerNarration">
+    </div>
+
+    <div class="form-group">
+        <label for="narration">Narration:</label>
+        <input type="text" id="narration" name="narration">
+    </div>
+
+    <!-- Entry 1 -->
+    <div class="form-group">
+        <label for="amount1">Amount 1:</label>
+        <input type="number" id="amount1" name="amount1">
+    </div>
+
+    <div class="form-group">
+        <label for="drCr1">Dr/Cr 1:</label>
+        <select id="drCr1" name="drCr1">
+            <option value="Dr">Dr</option>
+            <option value="Cr">Cr</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ledgerNarration1">Ledger Narration 1:</label>
+        <input type="text" id="ledgerNarration1" name="ledgerNarration1">
+    </div>
+
+    <!-- Entry 2 -->
+    <div class="form-group">
+        <label for="amount2">Amount 2:</label>
+        <input type="number" id="amount2" name="amount2">
+    </div>
+
+    <div class="form-group">
+        <label for="drCr2">Dr/Cr 2:</label>
+        <select id="drCr2" name="drCr2">
+            <option value="Dr">Dr</option>
+            <option value="Cr">Cr</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="ledgerNarration2">Ledger Narration 2:</label>
+        <input type="text" id="ledgerNarration2" name="ledgerNarration2">
+    </div>
+
+
+    <div class="form-group">
+        <label for="customerId">Customer ID:</label>
+        <input type="number" id="customerId" name="customerId">
+    </div>
+
+    <div class="form-group">
+        <label for="userId">User ID:</label>
+        <input type="number" id="userId" name="userId">
+    </div>
+
+    <div class="center-button">
+        <button type="submit">Submit</button>
+    </div>
+
+</form>
+
+</body>
+</html>
