@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Customer Details</title></head>
+<body>
+  <h1>Customer</h1>
+  <p><strong>ID:</strong> <span th:text="${customer.custID}"/></p>
+  <p><strong>Name:</strong> <span th:text="${customer.custName}"/></p>
+  <p><strong>Address:</strong> <span th:text="${customer.address}"/></p>
+  <p><strong>Pincode:</strong> <span th:text="${customer.pincode}"/></p>
+  <p><strong>DigiPin:</strong> <span th:text="${customer.digiPin}"/></p>
+  <a th:href="@{/customers}">← Back to list</a>
+</body>
+</html>

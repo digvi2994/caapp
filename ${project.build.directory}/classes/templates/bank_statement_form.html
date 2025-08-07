@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bank Statement Form</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .form-heading {
+            text-align: center;
+            color: #333;
+             margin :0 0 50px 0 ;
+<!--              padding:  0 0 0 20px;-->
+        }
+
+        form {
+
+            background-color: #fff;
+            padding: 30px 40px;
+            max-width: 800px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        label {
+            width: 220px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input, select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+<!--input::-webkit-inner-spin-button {-->
+<!--    -webkit-appearance: none;-->
+<!--    margin: 0;-->
+<!--}-->
+        input:focus, select:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+       display: block;
+       margin: 20px auto;
+            margin-top: 25px;
+            width: 20%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        @media (max-width: 600px) {
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            label {
+                width: 100%;
+                margin-bottom: 8px;
+            }
+
+            input, select {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<form action="/submitBankStatement" method="post">
+    <div class="form-heading">
+        <h2>Bank Statement Form</h2>
+    </div>
+    <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date">
+    </div>
+
+    <div class="form-group">
+        <label for="chequeNo">Cheque No.:</label>
+        <input type="text" id="chequeNo" name="chequeNo">
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <input type="text" id="description" name="description">
+    </div>
+
+    <div class="form-group">
+        <label for="ledger">Ledger:</label>
+        <input type="text" id="ledger" name="ledger">
+    </div>
+
+    <div class="form-group">
+        <label for="debit">Debit:</label>
+        <input type="number" id="debit" name="debit">
+    </div>
+
+    <div class="form-group">
+        <label for="credit">Credit:</label>
+        <input type="number" id="credit" name="credit">
+    </div>
+
+    <div class="form-group">
+        <label for="balance">Balance:</label>
+        <input type="number" id="balance" name="balance">
+    </div>
+
+
+    <div class="form-group">
+        <label for="customerId">Customer ID:</label>
+        <input type="number" id="customerId" name="customerId">
+    </div>
+
+    <div class="form-group">
+        <label for="userId">User ID:</label>
+        <input type="number" id="userId" name="userId">
+    </div>
+
+    <div class="form-group center-button">
+        <button type="submit">Submit</button>
+    </div>
+
+</form>
+
+</body>
+</html>

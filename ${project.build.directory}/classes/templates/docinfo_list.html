@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Document List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    crossorigin="anonymous">
+
+</head>
+<body>
+  <div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3>All Documents</h3>
+      <a th:href="@{/docs/new}" class="btn btn-primary">+ New Document</a>
+    </div>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Document Name</th>
+          <th>Upload Date</th>
+          <th>Completion Date</th>
+          <th>Allo Flag</th>
+          <th>User ID</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="doc, stat : ${docs}">
+          <td th:text="${stat.index + 1}">1</td>
+          <td th:text="${doc.fileNameOnly}">Sample</td>
+          <td th:text="${doc.uploadDt}">2025-06-05</td>
+          <td th:text="${doc.compltionDt}">2025-07-01</td>
+          <td th:text="${doc.alloflag}">Y</td>
+          <td th:text="${doc.userID}">42</td>
+          <td>
+            <a th:href="@{|/docs/edit/${doc.docID}|}" class="btn btn-sm btn-warning">Edit</a>
+            <a th:href="@{|/docs/delete/${doc.docID}|}"
+               onclick="return confirm('Delete this document?');"
+               class="btn btn-sm btn-danger">
+              Delete
+            </a>
+          </td>
+        </tr>
+        <tr th:if="${docs.isEmpty()}">
+          <td colspan="7" class="text-center text-muted">
+            No documents found.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous">
+  </script>
+</body>
+</html>

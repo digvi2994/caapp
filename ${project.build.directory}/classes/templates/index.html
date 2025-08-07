@@ -1,0 +1,330 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>File List — ERPCA App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    crossorigin="anonymous">
+
+  <!-- PDF.js Library -->
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"
+    crossorigin="anonymous">
+  </script>
+
+  <style>
+    /* Prevent text/image selection and dragging */
+    body, img, canvas {
+      user-select: none;
+      -webkit-user-drag: none;
+      -webkit-touch-callout: none;
+    }
+    /* Let modal‐content fill the viewport */
+    .modal-fullscreen .modal-content {
+      height: 100vh;
+    }
+    /* Modal body: center content and allow scroll if needed */
+    .modal-body {
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+    }
+    /* Canvas should scale responsively */
+    #pdf-canvas {
+      display: none;         /* hidden until PDF loads */
+      max-width: 100%;
+      max-height: 100%;
+    }
+    /* Image viewer should scale responsively */
+    #img-viewer {
+      display: none;         /* hidden until image loads */
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let pdfDoc      = null;
+      let currentPage = 1;
+      const scale     = 1.5;
+      const canvas    = document.getElementById('pdf-canvas');
+      const ctx       = canvas.getContext('2d');
+      const imgViewer = document.getElementById('img-viewer');
+
+      // Block right-click on PDF canvas and image
+      canvas.addEventListener('contextmenu', e => e.preventDefault());
+      imgViewer.addEventListener('contextmenu', e => e.preventDefault());
+
+      const prevBtn       = document.getElementById('prev');
+      const nextBtn       = document.getElementById('next');
+      const pageNumSpan   = document.getElementById('page_num');
+      const pageCountSpan = document.getElementById('page_count');
+      let pdfUrl          = null;
+
+      function isPdf(key) {
+        const ext = key.substring(key.lastIndexOf('.') + 1).toLowerCase();
+        return ext === 'pdf';
+      }
+      function isImage(key) {
+        const ext = key.substring(key.lastIndexOf('.') + 1).toLowerCase();
+        return ext === 'jpg' || ext === 'jpeg' || ext === 'png';
+      }
+
+      // “View” button click handler
+      document.querySelectorAll('.btn-view-file').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const key      = this.getAttribute('data-key');
+          const filename = key.substring(key.lastIndexOf('/') + 1);
+          document.getElementById('modalTitle').textContent = filename;
+          const resourceUrl = '/proxy?key=' + encodeURIComponent(key);
+
+          if (isPdf(key)) {
+            // Show PDF canvas, hide img
+            canvas.style.display    = 'block';
+            imgViewer.style.display = 'none';
+            currentPage             = 1;
+
+            pdfjsLib.getDocument(resourceUrl).promise
+              .then(pdf => {
+                pdfDoc = pdf;
+                pageCountSpan.textContent = pdfDoc.numPages;
+                prevBtn.style.visibility  = 'visible';
+                nextBtn.style.visibility  = 'visible';
+                renderPage(currentPage);
+              })
+              .catch(err => console.error('Error loading PDF:', err));
+          }
+          else if (isImage(key)) {
+            // Hide PDF canvas, show img
+            canvas.style.display    = 'none';
+            imgViewer.style.display = 'block';
+            imgViewer.src           = resourceUrl;
+            prevBtn.style.visibility  = 'hidden';
+            nextBtn.style.visibility  = 'hidden';
+            pageNumSpan.textContent   = '–';
+            pageCountSpan.textContent = '–';
+          }
+          else {
+            canvas.style.display    = 'none';
+            imgViewer.style.display = 'none';
+            prevBtn.style.visibility  = 'hidden';
+            nextBtn.style.visibility  = 'hidden';
+            pageNumSpan.textContent   = '–';
+            pageCountSpan.textContent = '–';
+            console.warn('Unsupported file type:', key);
+          }
+        });
+      });
+
+      function renderPage(pageNumber) {
+        pdfDoc.getPage(pageNumber).then(page => {
+          const viewport = page.getViewport({ scale: scale });
+          canvas.width  = viewport.width;
+          canvas.height = viewport.height;
+
+          page.render({
+            canvasContext: ctx,
+            viewport: viewport
+          }).promise.then(() => {
+            pageNumSpan.textContent = pageNumber;
+          });
+        });
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (!pdfDoc || currentPage <= 1) return;
+        currentPage--;
+        renderPage(currentPage);
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (!pdfDoc || currentPage >= pdfDoc.numPages) return;
+        currentPage++;
+        renderPage(currentPage);
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container mt-5">
+	<div class="d-flex justify-content-between align-items-center mb-3">
+	  <h3>Files on S3 (erpappdocs bucket)</h3>
+	  <div>
+	    <!-- Logout button -->
+	    <a th:href="@{/logout}" class="btn btn-danger me-2">Logout</a>
+	    <!-- Upload button (opens in new tab) -->
+	    <a th:href="@{/upload}" target="_blank" class="btn btn-success">
+	      Upload File
+	    </a>
+		<!-- “Select” button triggers form submission -->
+		<!-- Note: form itself begins below -->
+		<button
+		  type="submit"
+		  form="fileSelectionForm"        
+		  class="btn btn-primary ms-2">
+		  Select
+		</button>
+	  </div>
+	</div>
+	<div class="container mt-4">
+
+	  <!-- flash messages -->
+	  <div th:if="${error}"
+	       class="alert alert-danger"
+	       th:text="${error}">
+	  </div>
+	  <div th:if="${success}"
+	       class="alert alert-success"
+	       th:text="${success}">
+	</div>
+    <div class="table-responsive mt-3">
+		<!-- 1) Wrap the table in a FORM that posts to /docs/select -->
+		<form
+		  id="fileSelectionForm"
+		  th:action="@{/docs/select}"
+		  method="post">
+	      <table class="table table-bordered">
+	        <thead>
+	          <tr>
+				<th>
+				  <!-- (Optional) “select all” checkbox can go here -->
+				  <input type="checkbox" id="selectAll" />
+				</th>
+	            <th>#</th>
+	            <th>Filename</th>
+	            <th>Type</th>
+	            <th>Action</th>
+	          </tr>
+	        </thead>
+	        <tbody>
+	          <tr th:each="key, stat : ${files}">
+				
+				<td>
+				  <!-- user checks this to select the file -->
+				  <input
+				    type="checkbox"
+				    name="selectedFiles"
+					th:value="${key}"
+				    class="file-checkbox form-check-input"
+				  />
+				</td>
+				
+	            <!-- 1-based index -->
+	            <td th:text="${stat.index + 1}">1</td>
+	
+	            <!-- Show just the base filename -->
+	            <td th:text="${key.substring(key.lastIndexOf('/') + 1)}">sample.pdf</td>
+	
+	            <!-- Plain-text “Type” column -->
+	            <td>
+	              <span th:if="${#strings.endsWith(key.toLowerCase(), '.pdf')}">PDF</span>
+	              <span th:if="${#strings.endsWith(key.toLowerCase(), '.jpg') 
+	                          or #strings.endsWith(key.toLowerCase(), '.jpeg')
+	                          or #strings.endsWith(key.toLowerCase(), '.png')}">
+	                Image
+	              </span>
+	            </td>
+	
+	            <td>
+	              <button
+	                type="button"
+	                class="btn btn-primary btn-sm btn-view-file"
+	                data-bs-toggle="modal"
+	                data-bs-target="#fileModal"
+	                th:attr="data-key=${key}">
+	                View
+	              </button>
+	            </td>
+	          </tr>
+	          <tr th:if="${files.isEmpty()}">
+	            <td colspan="4" class="text-center text-muted">
+	              No files found in S3.
+	            </td>
+	          </tr>
+	        </tbody>
+	      </table>
+	  	</form>
+    </div>
+  </div>
+
+  <!-- Full-screen Modal for PDF or Image Viewing -->
+  <div
+    class="modal fade"
+    id="fileModal"
+    tabindex="-1"
+    aria-labelledby="fileModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="fileModalLabel">
+            Viewing: <span id="modalTitle">—</span>
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close">
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <!-- PDF.js canvas (hidden until PDF loads) -->
+          <canvas id="pdf-canvas"></canvas>
+          <!-- Image viewer (hidden until image loads) -->
+          <img id="img-viewer" alt="Image preview" />
+        </div>
+
+        <div class="modal-footer d-flex justify-content-between align-items-center">
+          <div>
+            <button id="prev" class="btn btn-secondary btn-sm">Previous</button>
+            <button id="next" class="btn btn-secondary btn-sm">Next</button>
+          </div>
+          <div>
+            Page <span id="page_num">—</span> of <span id="page_count">—</span>
+          </div>
+          <div>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              data-bs-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap Bundle with Popper -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous">
+  </script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous">
+  </script>
+  <script>
+    // OPTIONAL: “Select All” checkbox behavior
+    document.addEventListener('DOMContentLoaded', function() {
+      const selectAllBox = document.getElementById('selectAll');
+      if (selectAllBox) {
+        selectAllBox.addEventListener('change', function() {
+          const checkboxes = document.querySelectorAll('.file-checkbox');
+          checkboxes.forEach(cb => cb.checked = selectAllBox.checked);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
